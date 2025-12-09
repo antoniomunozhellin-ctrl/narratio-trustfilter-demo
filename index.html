@@ -1,0 +1,1426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Narratio Trust Filter™ · Live Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --n-bg: #050509;
+      --n-surface: #111018;
+      --n-surface-soft: #181720;
+      --n-border-subtle: #272532;
+      --n-border-strong: #3a3847;
+      --n-text-main: #f7f4ef;
+      --n-text-muted: #9b95a3;
+      --n-accent: #8B1A1A;
+      --n-accent-soft: rgba(139, 26, 26, 0.18);
+      --n-radius-lg: 18px;
+      --n-radius-md: 14px;
+      --n-shadow-soft: 0 26px 70px rgba(0,0,0,0.6);
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont,
+                   "Helvetica Neue", Arial, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 32px 12px;
+      background: radial-gradient(circle at top, #2b1a22 0, #050509 40%, #010104 100%);
+      color: var(--n-text-main);
+    }
+
+    .shell {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: linear-gradient(135deg, #15131e 0%, #0d0c14 100%);
+      border-radius: 26px;
+      border: 1px solid var(--n-border-subtle);
+      box-shadow: var(--n-shadow-soft);
+      overflow: hidden;
+      backdrop-filter: blur(18px);
+      position: relative;
+      padding: 24px 26px 26px;
+    }
+
+    .shell::before {
+      content: "";
+      position: absolute;
+      inset: -25%;
+      background:
+        radial-gradient(circle at 8% 0%, rgba(139, 26, 26, 0.26), transparent 55%),
+        radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.06), transparent 55%);
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    .shell-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* HEADER / HERO */
+    .top {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 22px;
+    }
+
+    .brand-block {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .brand-logo img {
+      height: 32px;
+      display: block;
+    }
+
+    .brand-text-title {
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .brand-text-sub {
+      font-size: 12px;
+      color: var(--n-text-muted);
+      margin-top: 4px;
+    }
+
+    .hero-kicker {
+      font-size: 11px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: var(--n-text-muted);
+      margin-bottom: 4px;
+    }
+
+    .hero-title {
+      font-size: 22px;
+      font-weight: 600;
+      margin: 0 0 6px;
+    }
+
+    .hero-subtitle {
+      font-size: 13px;
+      color: var(--n-text-muted);
+      max-width: 460px;
+    }
+
+    .pill-env {
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--n-border-strong);
+      background: rgba(10,10,18,0.9);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      color: var(--n-text-muted);
+    }
+
+    .pill-env-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: #32d583;
+      box-shadow: 0 0 0 4px rgba(50,213,131,0.25);
+    }
+
+    @media (max-width: 800px) {
+      .shell {
+        padding: 18px 16px 20px;
+      }
+      .top {
+        align-items: flex-start;
+      }
+    }
+
+    /* LAYOUT MAIN */
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 1.4fr);
+      gap: 22px;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 960px) {
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .section-title {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: .16em;
+      color: var(--n-text-muted);
+      margin-bottom: 10px;
+    }
+
+    .card {
+      background: radial-gradient(circle at 0 0, rgba(255,255,255,0.03), transparent 55%),
+                  var(--n-surface);
+      border-radius: var(--n-radius-md);
+      border: 1px solid var(--n-border-subtle);
+      padding: 16px 16px 18px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: -30%;
+      background: radial-gradient(circle at 0 0, rgba(255,255,255,0.06), transparent 55%);
+      opacity: 0.35;
+      pointer-events: none;
+    }
+
+    .card-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    h2 {
+      font-size: 16px;
+      margin: 0 0 8px;
+    }
+
+    p.muted {
+      font-size: 12px;
+      color: var(--n-text-muted);
+      margin: 0 0 10px;
+    }
+
+    small.helper {
+      font-size: 11px;
+      color: var(--n-text-muted);
+      display: block;
+      margin-top: 4px;
+    }
+
+    /* INPUTS */
+    .input-shell {
+      border-radius: 18px;
+      border: 1px dashed var(--n-border-subtle);
+      background: #111018;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      color: var(--n-text-muted);
+      margin-bottom: 10px;
+    }
+
+    .input-icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.04);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+    }
+
+    input[type="file"] {
+      font-size: 11px;
+      color: var(--n-text-muted);
+      max-width: 100%;
+    }
+
+    textarea.sources {
+      width: 100%;
+      min-height: 96px;
+      max-height: 140px;
+      resize: vertical;
+      border-radius: 14px;
+      border: 1px solid var(--n-border-subtle);
+      background: #111018;
+      color: var(--n-text-main);
+      padding: 8px 10px;
+      font-size: 12px;
+    }
+
+    textarea.sources::placeholder {
+      color: rgba(155,149,163,0.7);
+    }
+
+    .btn-run {
+      border-radius: 999px;
+      border: 1px solid var(--n-accent);
+      background: var(--n-accent);
+      color: #fdf7f2;
+      padding: 8px 18px;
+      font-size: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+
+    .btn-run span.icon {
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.35);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+    }
+
+    .btn-secondary {
+      border-radius: 999px;
+      border: 1px solid var(--n-border-subtle);
+      background: #181621;
+      color: #f7f4ef;
+      padding: 7px 14px;
+      font-size: 11px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+
+    .status {
+      font-size: 11px;
+      color: var(--n-text-muted);
+      margin-top: 6px;
+    }
+
+    .status strong {
+      color: #ffffff;
+      font-weight: 500;
+    }
+
+    /* KPI GRID */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    @media (max-width: 600px) {
+      .kpi-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .kpi {
+      border-radius: 14px;
+      background: #181621;
+      border: 1px solid var(--n-border-subtle);
+      padding: 10px 10px 9px;
+      font-size: 11px;
+    }
+
+    .kpi-label {
+      color: var(--n-text-muted);
+    }
+
+    .kpi-value {
+      display: block;
+      margin-top: 4px;
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: .01em;
+    }
+
+    .kpi-tagline {
+      font-size: 11px;
+      color: var(--n-text-muted);
+      margin-top: 2px;
+    }
+
+    /* TABLES + LISTS */
+    .list-clean {
+      list-style: none;
+      padding-left: 0;
+      margin: 6px 0 0;
+      font-size: 12px;
+    }
+
+    .list-clean li {
+      margin-bottom: 4px;
+    }
+
+    .table-wrap {
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid var(--n-border-subtle);
+      margin-top: 10px;
+      background: #151320;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    thead {
+      background: #1c1a27;
+      color: var(--n-text-muted);
+    }
+
+    th, td {
+      padding: 7px 9px;
+      border-top: 1px solid #262433;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    tbody tr:nth-child(1) td {
+      background: #181623;
+    }
+
+    .badge-soft {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      border: 1px solid var(--n-border-subtle);
+      background: rgba(255,255,255,0.02);
+      color: var(--n-text-muted);
+      gap: 6px;
+    }
+
+    .badge-soft-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--n-accent);
+    }
+
+    /* MODULES */
+    .modules-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.6fr) minmax(0, 1.2fr);
+      gap: 16px;
+      margin-top: 12px;
+    }
+
+    @media (max-width: 900px) {
+      .modules-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .module-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1.8fr) 62px 60px;
+      gap: 8px;
+      align-items: center;
+      font-size: 11px;
+      margin-bottom: 8px;
+    }
+
+    .module-name {
+      font-weight: 500;
+      font-size: 12px;
+    }
+
+    .module-weight {
+      text-align: center;
+      color: var(--n-text-muted);
+    }
+
+    .module-score {
+      text-align: right;
+      font-weight: 600;
+    }
+
+    .bar-track {
+      width: 100%;
+      height: 6px;
+      border-radius: 999px;
+      background: #201d29;
+      overflow: hidden;
+      margin-top: 4px;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--n-accent), #e76f51);
+      width: 0%;
+    }
+
+    .overall-score {
+      font-size: 28px;
+      font-weight: 600;
+    }
+
+    .overall-tagline {
+      font-size: 11px;
+      color: var(--n-text-muted);
+      margin-top: 4px;
+    }
+
+    .insights {
+      font-size: 12px;
+      color: var(--n-text-muted);
+      margin-top: 8px;
+    }
+
+    .insights strong {
+      color: #f7f4ef;
+    }
+  </style>
+</head>
+<body>
+<div class="shell">
+  <div class="shell-inner">
+
+    <!-- HEADER -->
+    <header class="top">
+      <div class="brand-block">
+        <div class="brand-logo">
+          <!-- Replace with your own logo path -->
+          <img src="assets/narratio-logo-light.png" alt="Narratio logo" />
+        </div>
+        <div>
+          <div class="brand-text-title">Narratio Trust Filter™</div>
+          <div class="brand-text-sub">
+            Unified ingestion, cleaning & traceability for any content: data, media and logs.
+          </div>
+        </div>
+      </div>
+      <div style="text-align:right; min-width:230px;">
+        <div class="hero-kicker">Live sandbox · Frontend-only</div>
+        <div class="pill-env">
+          <span class="pill-env-dot"></span>
+          <span>Demo environment · No data is stored</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- HERO TEXT -->
+    <section style="margin-bottom:18px; display:flex; flex-wrap:wrap; gap:20px; justify-content:space-between;">
+      <div>
+        <h1 class="hero-title">From raw signals to traceable, trustworthy inputs.</h1>
+        <p class="hero-subtitle">
+          Upload ESG reports, CSVs, PDFs, media or logs. Trust Filter™ runs an ingest → clean →
+          normalize → deduplicate pipeline and estimates how ready your material is to feed a
+          non-binary verification system.
+        </p>
+      </div>
+    </section>
+
+    <!-- MAIN LAYOUT -->
+    <section class="layout">
+      <!-- LEFT: INPUTS + OVERVIEW -->
+      <div>
+        <div class="section-title">1 · Ingest & configuration</div>
+        <article class="card">
+          <div class="card-inner">
+            <h2>Sources</h2>
+            <p class="muted">
+              Any input that would normally feed Narratio: structured data, unstructured text,
+              multimedia evidence or system logs.
+            </p>
+
+            <div class="input-shell">
+              <div class="input-icon">📁</div>
+              <div style="flex:1;">
+                <div style="font-size:11px; color:var(--n-text-muted); margin-bottom:2px;">
+                  Local files
+                </div>
+                <input id="file-input" type="file" multiple />
+              </div>
+            </div>
+            <small class="helper">
+              CSV · TXT · JSON · Markdown · PDFs · Images · Video · Audio · Log files.
+              Everything is processed locally in your browser.
+            </small>
+
+            <div style="height:12px;"></div>
+
+            <textarea id="url-input" class="sources"
+              placeholder="Online sources (one per line), e.g.:
+https://example.com/esg-q3-report
+https://example.com/media/latam-plant-photo.jpg
+https://example.org/benchmark/sector-esg.pdf"></textarea>
+            <small class="helper">
+              In this GitHub demo, URLs are treated as symbolic sources (no network fetch due to CORS).
+            </small>
+
+            <button id="run-btn" class="btn-run">
+              <span class="icon">▶</span>
+              Run Trust Filter™
+            </button>
+
+            <div id="status" class="status">
+              No run yet. Upload files and/or add URLs, then click <strong>Run Trust Filter™</strong>.
+            </div>
+          </div>
+        </article>
+
+        <div style="height:18px;"></div>
+
+        <article class="card">
+          <div class="card-inner">
+            <h2>Trust Filter™ overview</h2>
+            <p class="muted">
+              Quick pulse of your ingestion quality before sending anything to a verification model.
+            </p>
+
+            <div class="kpi-grid">
+              <div class="kpi">
+                <div class="kpi-label">Data quality score</div>
+                <span id="kpi-quality" class="kpi-value">–</span>
+                <div id="kpi-quality-tag" class="kpi-tagline">Run the pipeline to score quality.</div>
+              </div>
+              <div class="kpi">
+                <div class="kpi-label">Structural completeness</div>
+                <span id="kpi-completeness" class="kpi-value">–</span>
+                <div id="kpi-completeness-tag" class="kpi-tagline">
+                  Estimated from CSV headers, rows and non-empty cells.
+                </div>
+              </div>
+              <div class="kpi">
+                <div class="kpi-label">Duplicate signals</div>
+                <span id="kpi-duplicates" class="kpi-value">–</span>
+                <div id="kpi-duplicates-tag" class="kpi-tagline">
+                  Approximate percentage of repeated rows across CSV files.
+                </div>
+              </div>
+              <div class="kpi">
+                <div class="kpi-label">Source diversity</div>
+                <span id="kpi-diversity" class="kpi-value">–</span>
+                <div id="kpi-diversity-tag" class="kpi-tagline">
+                  Mix of CSV, text, media & online sources.
+                </div>
+              </div>
+            </div>
+
+            <div class="insights" id="trust-insights">
+              When you run the pipeline, you’ll see targeted commentary here about robustness,
+              gaps and readiness for verification.
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <!-- RIGHT: TRACEABILITY + MODULES -->
+      <div>
+        <div class="section-title">2 · Traceability & non-binary verification view</div>
+
+        <article class="card">
+          <div class="card-inner">
+            <h2>Traceability snapshot</h2>
+            <p class="muted">
+              How Trust Filter™ has seen your material: what came in, how it was cleaned,
+              normalized and deduplicated.
+            </p>
+
+            <div class="badge-soft" style="margin-bottom:8px;">
+              <span class="badge-soft-dot"></span>
+              <span id="trace-summary-label">Waiting for sources…</span>
+            </div>
+
+            <ul class="list-clean" id="trace-list">
+              <li>• Total files: –</li>
+              <li>• URLs: –</li>
+              <li>• CSV datasets: –</li>
+              <li>• Text corpora: –</li>
+              <li>• Media evidence: –</li>
+            </ul>
+
+            <div class="table-wrap" id="csv-table-wrap" style="display:none;">
+              <table>
+                <thead>
+                  <tr>
+                    <th>CSV dataset</th>
+                    <th>Rows</th>
+                    <th>Columns</th>
+                    <th>Completeness</th>
+                  </tr>
+                </thead>
+                <tbody id="csv-table-body">
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </article>
+
+        <div style="height:18px;"></div>
+
+        <article class="card">
+          <div class="card-inner">
+            <h2>Non-binary verification system view</h2>
+            <p class="muted">
+              Trust Filter™ doesn’t say “true/false”. It prepares material for a five-module
+              verification system and estimates how strong each layer will be.
+            </p>
+
+            <div class="modules-grid">
+              <!-- Modules table -->
+              <div>
+                <div style="font-size:11px; color:var(--n-text-muted); margin-bottom:6px;">
+                  Weighted modules · Based on your current ingest
+                </div>
+
+                <div class="module-row">
+                  <div>
+                    <div class="module-name">1. Semantic analysis</div>
+                    <div class="bar-track"><div id="bar-semantic" class="bar-fill"></div></div>
+                  </div>
+                  <div class="module-weight">20%</div>
+                  <div id="score-semantic" class="module-score">–</div>
+                </div>
+
+                <div class="module-row">
+                  <div>
+                    <div class="module-name">2. Verifiability classification</div>
+                    <div class="bar-track"><div id="bar-verif" class="bar-fill"></div></div>
+                  </div>
+                  <div class="module-weight">25%</div>
+                  <div id="score-verif" class="module-score">–</div>
+                </div>
+
+                <div class="module-row">
+                  <div>
+                    <div class="module-name">3. Editorial cross-check</div>
+                    <div class="bar-track"><div id="bar-editorial" class="bar-fill"></div></div>
+                  </div>
+                  <div class="module-weight">30%</div>
+                  <div id="score-editorial" class="module-score">–</div>
+                </div>
+
+                <div class="module-row">
+                  <div>
+                    <div class="module-name">4. Source trust evaluation</div>
+                    <div class="bar-track"><div id="bar-trust" class="bar-fill"></div></div>
+                  </div>
+                  <div class="module-weight">15%</div>
+                  <div id="score-trust" class="module-score">–</div>
+                </div>
+
+                <div class="module-row">
+                  <div>
+                    <div class="module-name">5. Report generation</div>
+                    <div class="bar-track"><div id="bar-report" class="bar-fill"></div></div>
+                  </div>
+                  <div class="module-weight">10%</div>
+                  <div id="score-report" class="module-score">–</div>
+                </div>
+              </div>
+
+              <!-- Overall score + PDF -->
+              <div>
+                <div style="font-size:11px; color:var(--n-text-muted); margin-bottom:6px;">
+                  Estimated Narratio TrustScore™ after verification
+                </div>
+                <div class="overall-score" id="overall-score">–</div>
+                <div id="overall-tagline" class="overall-tagline">
+                  Upload ESG data, URLs and media to see how your story would look through Narratio’s verification lens.
+                </div>
+
+                <div class="insights" id="module-insights">
+                  The five-module view reflects the philosophy you described: explain how each
+                  claim was evaluated and which evidence backs it, rather than only saying
+                  “true” or “false”.
+                </div>
+
+                <div style="margin-top:14px;">
+                  <button id="btn-pdf" class="btn-secondary">
+                    <span class="icon">⇩</span>
+                    Download verification report (PDF)
+                  </button>
+                  <small class="helper">
+                    This simulates the “Report generation” stage (10%) of Narratio’s non-binary system.
+                  </small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- jsPDF for PDF generation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script>
+  const state = {
+    files: [],       // { name, type, size, category, text, csvStats }
+    urls: [],        // { url }
+    combinedText: "",
+    numericSentences: []
+  };
+
+  const MAX_TEXT_LEN = 20000;
+  const MAX_CSV_ROWS = 800;
+
+  const BASE = {
+    completenessFallback: 85,
+    qualityBase: 78,
+    trustBase: 80
+  };
+
+  const $ = id => document.getElementById(id);
+
+  let lastMetrics = null;
+  let lastRunDate = null;
+  const moduleScores = {
+    semantic: null,
+    verif: null,
+    editorial: null,
+    trust: null,
+    report: null,
+    overall: null
+  };
+
+  $('run-btn').addEventListener('click', runTrustFilter);
+  $('btn-pdf').addEventListener('click', generatePdfReport);
+
+  async function runTrustFilter() {
+    const fileInput = $('file-input');
+    const urlLines = $('url-input').value
+      .split('\n')
+      .map(l => l.trim())
+      .filter(l => l.length > 0);
+
+    $('status').innerHTML = 'Running pipeline…';
+
+    state.files = [];
+    state.urls = urlLines.map(u => ({ url: u }));
+    state.combinedText = "";
+    state.numericSentences = [];
+
+    if (fileInput.files && fileInput.files.length > 0) {
+      state.files = await Promise.all(Array.from(fileInput.files).map(readFileSmart));
+    }
+
+    buildCombinedText();
+    extractNumericSentences();
+
+    const metrics = computeMetrics();
+    lastMetrics = metrics;
+    lastRunDate = new Date();
+
+    updateOverview(metrics);
+    updateTraceability(metrics);
+    updateModules(metrics);
+
+    $('status').innerHTML =
+      `Pipeline completed · ${metrics.totalFiles} file(s) · ${metrics.totalUrls} URL(s) · `
+      + `${metrics.numericSentences} numeric statements detected.`;
+  }
+
+  function readFileSmart(file) {
+    return new Promise((resolve) => {
+      const type = file.type || "application/octet-stream";
+      const lowerName = file.name.toLowerCase();
+      let category = "other";
+
+      if (lowerName.endsWith('.csv')) category = "csv";
+      else if (lowerName.endsWith('.txt') || lowerName.endsWith('.md') || lowerName.endsWith('.log')) category = "text";
+      else if (lowerName.endsWith('.json')) category = "json";
+      else if (type.startsWith('image/')) category = "image";
+      else if (type.startsWith('video/')) category = "video";
+      else if (type.startsWith('audio/')) category = "audio";
+      else if (lowerName.endsWith('.pdf')) category = "pdf";
+
+      if (category === "image" || category === "video" || category === "audio" || category === "pdf") {
+        resolve({
+          name: file.name,
+          type,
+          size: file.size,
+          category,
+          text: "",
+          csvStats: null
+        });
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onerror = () => {
+        resolve({
+          name: file.name,
+          type,
+          size: file.size,
+          category,
+          text: "",
+          csvStats: null
+        });
+      };
+      reader.onload = () => {
+        const text = String(reader.result || "");
+        let csvStats = null;
+        if (category === "csv") {
+          csvStats = analyzeCsv(text);
+        }
+        resolve({
+          name: file.name,
+          type,
+          size: file.size,
+          category,
+          text,
+          csvStats
+        });
+      };
+      reader.readAsText(file);
+    });
+  }
+
+  function analyzeCsv(text) {
+    const lines = text.split(/\r?\n/).filter(l => l.trim().length > 0);
+    if (lines.length === 0) return null;
+
+    const header = lines[0].split(',');
+    const rows = lines.slice(1, 1 + MAX_CSV_ROWS).map(l => l.split(','));
+
+    const rowCount = rows.length;
+    const columnCount = header.length;
+
+    let nonEmptyCells = 0;
+    let totalCells = rowCount * columnCount;
+    const rowStrings = new Map();
+    let duplicateRows = 0;
+    let numericColumns = 0;
+
+    const numericFlags = header.map(() => false);
+
+    rows.forEach(row => {
+      const s = row.join(',');
+      const prev = rowStrings.get(s) || 0;
+      rowStrings.set(s, prev + 1);
+      if (prev >= 1) duplicateRows++;
+
+      row.forEach((cell, idx) => {
+        if ((cell || "").trim() !== "") nonEmptyCells++;
+        if (!numericFlags[idx]) {
+          const v = parseFloat(cell.replace(',', '.'));
+          if (!isNaN(v)) numericFlags[idx] = true;
+        }
+      });
+    });
+
+    numericColumns = numericFlags.filter(Boolean).length;
+
+    const completeness = totalCells > 0 ? (nonEmptyCells / totalCells) * 100 : BASE.completenessFallback;
+    const duplicatesRatio = rowCount > 0 ? (duplicateRows / rowCount) * 100 : 0;
+
+    return {
+      header,
+      rowCount,
+      columnCount,
+      completeness: Math.round(completeness * 10) / 10,
+      duplicatesRatio: Math.round(duplicatesRatio * 10) / 10,
+      numericColumns
+    };
+  }
+
+  function buildCombinedText() {
+    const pieces = [];
+    state.files.forEach(f => {
+      if (f.category === "csv" && f.text) {
+        pieces.push(`CSV: ${f.name}\n` + f.text.slice(0, 1500));
+      } else if ((f.category === "text" || f.category === "json") && f.text) {
+        pieces.push(`TEXT: ${f.name}\n` + f.text.slice(0, 1500));
+      }
+    });
+    state.urls.forEach(u => pieces.push(`URL: ${u.url}`));
+
+    let combined = pieces.join('\n\n');
+    if (combined.length > MAX_TEXT_LEN) {
+      combined = combined.slice(0, MAX_TEXT_LEN) + '\n\n[...] (truncated for demo)';
+    }
+    state.combinedText = combined;
+  }
+
+  function extractNumericSentences() {
+    const text = state.combinedText || "";
+    const sentences = text.split(/[\.\?\!]\s+/).map(s => s.trim()).filter(Boolean);
+    const numeric = [];
+    sentences.forEach(s => {
+      if (/\d/.test(s)) numeric.push(s);
+    });
+    state.numericSentences = numeric.slice(0, 80);
+  }
+
+  function computeMetrics() {
+    const files = state.files;
+    const urls = state.urls;
+
+    const totalFiles = files.length;
+    const totalUrls = urls.length;
+
+    let totalSize = 0;
+    let csvFiles = [];
+    let textFiles = [];
+    let mediaFiles = [];
+    let pdfFiles = [];
+
+    files.forEach(f => {
+      totalSize += f.size || 0;
+      if (f.category === "csv") csvFiles.push(f);
+      else if (f.category === "text" || f.category === "json") textFiles.push(f);
+      else if (f.category === "image" || f.category === "video" || f.category === "audio") mediaFiles.push(f);
+      else if (f.category === "pdf") pdfFiles.push(f);
+    });
+
+    let avgCompleteness = null;
+    let avgDuplicates = null;
+    let totalNumericCols = 0;
+    let totalCsvRows = 0;
+
+    csvFiles.forEach(f => {
+      if (f.csvStats) {
+        avgCompleteness = avgCompleteness === null
+          ? f.csvStats.completeness
+          : (avgCompleteness + f.csvStats.completeness) / 2;
+        avgDuplicates = avgDuplicates === null
+          ? f.csvStats.duplicatesRatio
+          : (avgDuplicates + f.csvStats.duplicatesRatio) / 2;
+        totalNumericCols += f.csvStats.numericColumns;
+        totalCsvRows += f.csvStats.rowCount;
+      }
+    });
+
+    if (avgCompleteness === null) avgCompleteness = BASE.completenessFallback;
+    if (avgDuplicates === null) avgDuplicates = 2;
+
+    const numericSentences = state.numericSentences.length;
+
+    const diversityScore = computeDiversityScore({
+      totalFiles,
+      csvFiles: csvFiles.length,
+      textFiles: textFiles.length,
+      mediaFiles: mediaFiles.length,
+      pdfFiles: pdfFiles.length,
+      urls: totalUrls
+    });
+
+    const qualityScore = computeQualityScore(avgCompleteness, avgDuplicates, numericSentences, diversityScore);
+
+    return {
+      totalFiles,
+      totalUrls,
+      totalSize,
+      csvFiles,
+      textFiles,
+      mediaFiles,
+      pdfFiles,
+      avgCompleteness,
+      avgDuplicates,
+      totalNumericCols,
+      totalCsvRows,
+      numericSentences,
+      diversityScore,
+      qualityScore
+    };
+  }
+
+  function computeDiversityScore(meta) {
+    let buckets = 0;
+    if (meta.csvFiles > 0) buckets++;
+    if (meta.textFiles > 0) buckets++;
+    if (meta.mediaFiles > 0) buckets++;
+    if (meta.pdfFiles > 0) buckets++;
+    if (meta.urls > 0) buckets++;
+
+    const base = buckets * 18;
+    const bonus = Math.min(20, meta.urls * 2 + meta.mediaFiles * 2);
+    return Math.round(Math.min(100, base + bonus));
+  }
+
+  function computeQualityScore(completeness, dupRatio, numericSentences, diversityScore) {
+    let score = BASE.qualityBase;
+
+    score += (completeness - 80) * 0.4;
+    score -= Math.min(dupRatio, 25) * 0.5;
+    score += Math.min(numericSentences, 50) * 0.3;
+    score += (diversityScore - 50) * 0.15;
+
+    if (score > 99) score = 99;
+    if (score < 30) score = 30;
+    return Math.round(score);
+  }
+
+  function updateOverview(m) {
+    const q = m.qualityScore;
+    const c = m.avgCompleteness;
+    const d = m.avgDuplicates;
+    const div = m.diversityScore;
+
+    $('kpi-quality').textContent = q + " / 100";
+    $('kpi-completeness').textContent = c.toFixed(1) + " %";
+    $('kpi-duplicates').textContent = d.toFixed(1) + " %";
+    $('kpi-diversity').textContent = div + " / 100";
+
+    let qTag, cTag, dTag, divTag;
+
+    if (q >= 90) qTag = "Very strong baseline. Material is ready to feed verification with minimal cleaning.";
+    else if (q >= 80) qTag = "Solid ingest. A few edge cases may need manual review.";
+    else if (q >= 65) qTag = "Usable, but Trust Filter™ highlights several issues worth addressing.";
+    else qTag = "High-risk ingest. You’d want to fix structure and duplicates before any public narrative.";
+
+    if (c >= 95) cTag = "Schemas look robust — very few missing cells across your primary CSV datasets.";
+    else if (c >= 85) cTag = "Good structural completeness with some gaps Narratio can surface.";
+    else cTag = "Noticeable holes in your datasets. Claims based on these fields will need careful messaging.";
+
+    if (d <= 2) dTag = "Duplicate rows are almost non-existent across sampled data.";
+    else if (d <= 8) dTag = "Some repeated records; deduplication rules can clean most of them.";
+    else dTag = "Duplicate signals are frequent. Trust Filter™ would run aggressive merge/dedup logic.";
+
+    if (div >= 80) divTag = "Rich mix of structured data, text, media and URLs — ideal for a layered Evidence Graph.";
+    else if (div >= 60) divTag = "Decent variety of sources. Adding more external references will strengthen claims.";
+    else divTag = "Source diversity is limited. Most of the story relies on a narrow set of inputs.";
+
+    $('kpi-quality-tag').textContent = qTag;
+    $('kpi-completeness-tag').textContent = cTag;
+    $('kpi-duplicates-tag').textContent = dTag;
+    $('kpi-diversity-tag').textContent = divTag;
+
+    const claims = m.numericSentences;
+    const insights = [];
+    insights.push(
+      `Trust Filter™ detected <strong>${claims}</strong> numeric statement(s) across your text and CSV snippets.`
+    );
+    if (m.totalCsvRows > 0) {
+      insights.push(
+        `Across <strong>${m.csvFiles.length}</strong> CSV file(s), the demo sampled `
+        + `<strong>${m.totalCsvRows}</strong> row(s) and <strong>${m.totalNumericCols}</strong> numeric column(s).`
+      );
+    }
+    if (m.mediaFiles.length > 0) {
+      insights.push(
+        `You attached <strong>${m.mediaFiles.length}</strong> media file(s) `
+        + `(images, video or audio), which Narratio would treat as visual or contextual evidence.`
+      );
+    }
+    if (m.pdfFiles.length > 0) {
+      insights.push(
+        `PDFs detected: <strong>${m.pdfFiles.length}</strong> — ideal for policy documents, reports or contracts.`
+      );
+    }
+
+    $('trust-insights').innerHTML = insights.join(' ');
+  }
+
+  function updateTraceability(m) {
+    const sourceLabel = m.totalFiles + m.totalUrls === 0
+      ? "Waiting for sources…"
+      : `Ingested ${m.totalFiles} local file(s) + ${m.totalUrls} URL(s) through Trust Filter™.`;
+
+    $('trace-summary-label').textContent = sourceLabel;
+
+    const totalSizeKB = m.totalSize / 1024;
+    const sizeLabel = totalSizeKB < 1024
+      ? totalSizeKB.toFixed(1) + " KB"
+      : (totalSizeKB / 1024).toFixed(1) + " MB";
+
+    $('trace-list').innerHTML = `
+      <li>• Total files: <strong>${m.totalFiles}</strong> (${sizeLabel} in total).</li>
+      <li>• URLs: <strong>${m.totalUrls}</strong>.</li>
+      <li>• CSV datasets: <strong>${m.csvFiles.length}</strong>.</li>
+      <li>• Text / JSON corpora: <strong>${m.textFiles.length}</strong>.</li>
+      <li>• Media evidence (images, video, audio): <strong>${m.mediaFiles.length}</strong>.</li>
+      <li>• PDFs: <strong>${m.pdfFiles.length}</strong>.</li>
+    `;
+
+    const tableWrap = $('csv-table-wrap');
+    const tbody = $('csv-table-body');
+    tbody.innerHTML = "";
+
+    if (m.csvFiles.length === 0) {
+      tableWrap.style.display = "none";
+      return;
+    }
+
+    m.csvFiles.forEach(f => {
+      const s = f.csvStats;
+      if (!s) return;
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${escapeHtml(f.name)}</td>
+        <td>${s.rowCount}</td>
+        <td>${s.columnCount}</td>
+        <td>${s.completeness.toFixed(1)} %</td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    tableWrap.style.display = "block";
+  }
+
+  function updateModules(m) {
+    const claims = m.numericSentences;
+    const semScore = clamp(40 + Math.min(claims * 2, 40), 40, 98);
+    const verifScore = clamp(50 + (m.avgCompleteness - 80) * 0.6 - m.avgDuplicates * 0.4, 35, 96);
+    const editorialScore = clamp(45 + m.totalUrls * 3 + Math.min(m.mediaFiles.length * 4, 20), 35, 95);
+    const trustScoreSrc = clamp(BASE.trustBase + (m.diversityScore - 50) * 0.3 - m.avgDuplicates * 0.3, 30, 95);
+    const reportScore = clamp(60 + Math.min(m.totalFiles + m.totalUrls, 20), 55, 99);
+
+    moduleScores.semantic = semScore;
+    moduleScores.verif = verifScore;
+    moduleScores.editorial = editorialScore;
+    moduleScores.trust = trustScoreSrc;
+    moduleScores.report = reportScore;
+
+    setModule('semantic', semScore);
+    setModule('verif', verifScore);
+    setModule('editorial', editorialScore);
+    setModule('trust', trustScoreSrc);
+    setModule('report', reportScore);
+
+    const overall =
+      semScore * 0.20 +
+      verifScore * 0.25 +
+      editorialScore * 0.30 +
+      trustScoreSrc * 0.15 +
+      reportScore * 0.10;
+
+    const overallRounded = Math.round(overall);
+    moduleScores.overall = overallRounded;
+
+    $('overall-score').textContent = overallRounded + " / 100";
+
+    let tagline;
+    if (overallRounded >= 90) {
+      tagline = "Narratio would surface a high-confidence, well-evidenced narrative from this ingest.";
+    } else if (overallRounded >= 80) {
+      tagline = "Strong verification profile. A few claims will need nuance, but the backbone is solid.";
+    } else if (overallRounded >= 65) {
+      tagline = "Mixed verification quality. Good material, but several claims will be downgraded or flagged.";
+    } else {
+      tagline = "High risk of misleading or underspecified statements. You’d want to reinforce evidence before publishing.";
+    }
+    $('overall-tagline').textContent = tagline;
+
+    const moduleInsights = [];
+    moduleInsights.push(
+      `Semantic analysis (20%) scores <strong>${semScore}/100</strong>, driven by `
+      + `<strong>${claims}</strong> numeric statement(s) detected.`
+    );
+    moduleInsights.push(
+      `Verifiability classification (25%) sits at <strong>${verifScore}/100</strong>, `
+      + `reflecting structural completeness of <strong>${m.avgCompleteness.toFixed(1)}%</strong> `
+      + `and a duplicate ratio of <strong>${m.avgDuplicates.toFixed(1)}%</strong>.`
+    );
+    moduleInsights.push(
+      `Editorial cross-check (30%) reaches <strong>${editorialScore}/100</strong> with `
+      + `<strong>${m.totalUrls}</strong> online reference(s) and <strong>${m.mediaFiles.length}</strong> media file(s).`
+    );
+    moduleInsights.push(
+      `Source trust evaluation (15%) is estimated at <strong>${trustScoreSrc}/100</strong> thanks to `
+      + `a diversity score of <strong>${m.diversityScore}/100</strong>.`
+    );
+    moduleInsights.push(
+      `Report generation (10%) scores <strong>${reportScore}/100</strong>, indicating enough structure and variety `
+      + `to build an explainable, link-rich audit trail.`
+    );
+
+    $('module-insights').innerHTML = moduleInsights.join(' ');
+  }
+
+  function setModule(key, score) {
+    const bar = $('bar-' + key);
+    const label = $('score-' + key);
+    if (bar) bar.style.width = score + "%";
+    if (label) label.textContent = score + " / 100";
+  }
+
+  function clamp(v, min, max) {
+    return Math.min(Math.max(v, min), max);
+  }
+
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  }
+
+  /* -------- PDF GENERATION (Report Generation 10%) -------- */
+
+  function generatePdfReport() {
+    if (!lastMetrics || !moduleScores.overall) {
+      alert("Run Trust Filter™ at least once before generating the report.");
+      return;
+    }
+    const jspdf = window.jspdf;
+    if (!jspdf || !jspdf.jsPDF) {
+      alert("PDF library could not be loaded.");
+      return;
+    }
+
+    const { jsPDF } = jspdf;
+    const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+
+    const marginLeft = 40;
+    const maxWidth = 515;
+    let y = 60;
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(16);
+    doc.text("Narratio Trust Filter™ · Verification Report (Demo)", marginLeft, y);
+    y += 24;
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    const ts = lastRunDate ? lastRunDate.toLocaleString() : "N/A";
+    doc.text(`Generated on: ${ts}`, marginLeft, y);
+    y += 16;
+
+    // Section helper
+    function section(title) {
+      y += 10;
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(12);
+      doc.text(title, marginLeft, y);
+      y += 12;
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(10);
+    }
+
+    function addLines(text) {
+      const lines = doc.splitTextToSize(text, maxWidth);
+      lines.forEach(line => {
+        if (y > 780) {
+          doc.addPage();
+          y = 60;
+        }
+        doc.text(line, marginLeft, y);
+        y += 14;
+      });
+    }
+
+    const m = lastMetrics;
+    const ms = moduleScores;
+
+    // 1. Ingest summary
+    section("1. Ingest summary (Trust Filter™)");
+    addLines(
+      `Total files ingested: ${m.totalFiles}. ` +
+      `Total URLs: ${m.totalUrls}. ` +
+      `Approximate size: ${(m.totalSize / 1024 / 1024).toFixed(2)} MB.`
+    );
+    addLines(
+      `CSV datasets: ${m.csvFiles.length}. Text/JSON corpora: ${m.textFiles.length}. ` +
+      `Media evidence (images, video, audio): ${m.mediaFiles.length}. PDFs: ${m.pdfFiles.length}.`
+    );
+    if (m.totalCsvRows > 0) {
+      addLines(
+        `Across the sampled CSV files, Trust Filter™ processed ${m.totalCsvRows} row(s) ` +
+        `and detected ${m.totalNumericCols} numeric column(s).`
+      );
+    }
+
+    // 2. Trust Filter KPIs
+    section("2. Trust Filter™ metrics");
+    addLines(`Data quality score: ${m.qualityScore}/100.`);
+    addLines(`Structural completeness (CSV): ${m.avgCompleteness.toFixed(1)}%.`);
+    addLines(`Estimated duplicate row ratio: ${m.avgDuplicates.toFixed(1)}%.`);
+    addLines(`Source diversity score: ${m.diversityScore}/100.`);
+    addLines(
+      `Numeric statements detected in text/CSV snippets: ${m.numericSentences}.`
+    );
+
+    // 3. Non-binary verification modules
+    section("3. Non-binary verification system (5 modules)");
+    addLines(
+      `1) Semantic analysis (20%): ${ms.semantic}/100 – measures how many ` +
+      `quantitative and contextual statements can be extracted from the material.`
+    );
+    addLines(
+      `2) Verifiability classification (25%): ${ms.verif}/100 – estimates to what ` +
+      `extent the statements can be checked against underlying data.`
+    );
+    addLines(
+      `3) Editorial cross-check (30%): ${ms.editorial}/100 – indicates the capacity ` +
+      `to contrast the content with external media, papers and benchmark datasets (proxied by URLs and media provided).`
+    );
+    addLines(
+      `4) Source trust evaluation (15%): ${ms.trust}/100 – reflects the diversity and ` +
+      `robustness of the source mix (structured data, text, media, online references).`
+    );
+    addLines(
+      `5) Report generation (10%): ${ms.report}/100 – estimates the ability to ` +
+      `produce an explainable, link-rich audit trail for buyers and stakeholders.`
+    );
+
+    // 4. Overall TrustScore + interpretation
+    section("4. Overall Narratio TrustScore™ (demo)");
+    addLines(`Estimated overall TrustScore: ${ms.overall}/100.`);
+
+    let interp;
+    if (ms.overall >= 90) {
+      interp =
+        "The ingest would allow Narratio to surface a high-confidence, well-evidenced narrative. " +
+        "Most claims can be exposed to external audiences with minimal adjustment.";
+    } else if (ms.overall >= 80) {
+      interp =
+        "The verification profile is strong. A few claims will need numerical nuance or careful wording, " +
+        "but the backbone of the story is sound for ESG or corporate communication purposes.";
+    } else if (ms.overall >= 65) {
+      interp =
+        "The verification quality is mixed. There is good material, but several statements will be " +
+        "downgraded, softened or flagged before publication to avoid overclaim.";
+    } else {
+      interp =
+        "The current ingest carries a high risk of misleading or underspecified statements. " +
+        "Narratio would recommend reinforcing data quality, diversity and external references " +
+        "before using this content in public-facing narratives.";
+    }
+    addLines(interp);
+
+    // 5. Suggested next steps
+    section("5. Suggested next steps");
+    const suggestions = [];
+    if (m.avgCompleteness < 90) {
+      suggestions.push(
+        "Increase completeness of key CSV fields (especially emissions, renewables and regional breakdowns) " +
+        "to improve verifiability and narrative robustness."
+      );
+    }
+    if (m.avgDuplicates > 5) {
+      suggestions.push(
+        "Review deduplication rules and upstream data pipelines to reduce repeated records in critical datasets."
+      );
+    }
+    if (m.diversityScore < 70) {
+      suggestions.push(
+        "Incorporate more external benchmarks, regulatory sources and sector reports so that editorial cross-check " +
+        "modules can better support or challenge internal claims."
+      );
+    }
+    if (m.numericSentences < 5) {
+      suggestions.push(
+        "Enrich the dataset with clearer KPIs and quantitative targets; this helps the system build precise, " +
+        "data-backed claims instead of vague statements."
+      );
+    }
+    if (suggestions.length === 0) {
+      suggestions.push(
+        "Maintain the current ingest strategy and periodically re-run Trust Filter™ as new quarters or datasets " +
+        "are added to keep the TrustScore fresh."
+      );
+    }
+    suggestions.forEach(s => addLines("• " + s));
+
+    doc.save("narratio-trust-filter-report.pdf");
+  }
+</script>
+</body>
+</html>
