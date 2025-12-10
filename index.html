@@ -28,22 +28,30 @@
 
     body {
       margin: 0;
-      padding: 32px 12px;
+      padding: 0px;
       background: radial-gradient(circle at top, #2b1a22 0, #050509 40%, #010104 100%);
       color: var(--n-text-main);
     }
 
-    .shell {
-      max-width: 1200px;
-      margin: 0 auto;
-      background: linear-gradient(135deg, #15131e 0%, #0d0c14 100%);
-      border-radius: 26px;
-      border: 1px solid var(--n-border-subtle);
-      box-shadow: var(--n-shadow-soft);
-      overflow: hidden;
-      backdrop-filter: blur(18px);
-      position: relative;
-      padding: 24px 26px 26px;
+  .shell {
+  max-width: none;          /* ⬅ ocupa todo el ancho */
+  margin: 0;
+  background: linear-gradient(135deg, #15131e 0%, #0d0c14 100%);
+  border-radius: 0;         /* ⬅ sin esquinas redondeadas */
+  border: none;             /* ⬅ sin borde de tarjeta */
+  box-shadow: none;         /* ⬅ sin sombra de tarjeta */
+  overflow: hidden;
+  backdrop-filter: blur(18px);
+  position: relative;
+  padding: 24px 40px 40px;  /* ⬅ solo padding interior */
+}
+
+@media (max-width: 800px) {
+  .shell {
+    padding: 18px 16px 24px;
+  }
+}
+
     }
 
     .shell::before {
@@ -63,39 +71,39 @@
     }
 
     /* HEADER / HERO */
-    .top {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 18px;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 22px;
-    }
-
-    .brand-block {
-  display: inline-flex;
-  flex-direction: column;    /* ⬅ antes era row, ahora columna */
-  align-items: flex-start;   /* ⬅ alineado a la izquierda */
-  gap: 0px;
+   .top {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  justify-content: space-between;
+  align-items: flex-start; /* ⬅ alineado arriba */
+  margin-bottom: 20px;
 }
 
-.brand-logo img {
-  height: 400px;              /* ⬅ logo más grande (ajusta a 60 si quieres aún más) */
+.brand-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;                /* ⬅ casi sin hueco entre logo y texto */
+}
+
+.brand-logo-img {
+  height: 90px;            /* ajusta 80–100 según lo veas */
   display: block;
-  margin-bottom: 0;
+  margin: 0;
 }
 
-.brand-text-title {
-  font-size: 20px;           /* ⬅ un poco más grande y destacado */
+.brand-headline {
+  font-size: 24px;
   font-weight: 600;
   letter-spacing: .08em;
   text-transform: uppercase;
+  margin: 0;
 }
 
-.brand-text-sub {
+.brand-subheadline {
   font-size: 13px;
   color: var(--n-text-muted);
-  margin-top: 4px;
+  margin: 0;
 }
 
 
@@ -482,28 +490,18 @@
 <div class="shell">
   <div class="shell-inner">
 
-   <header class="top">
-  <div class="brand-block">
-    <div class="brand-logo">
-      <img src="assets/narratio-logo-light.png" alt="Narratio logo" />
-    </div>
-
-    <!-- TEXTO JUSTO DEBAJO DEL LOGO -->
-    <div>
-      <h1 class="hero-title" style="margin:0;">
-        FILTRO DE CONFIANZA DE NARRATIO™
-      </h1>
-      <p class="hero-subtitle" style="margin-top:2px;">
-        Ingesta, trazabilidad y confianza unificadas
-      </p>
-    </div>
+  <header class="top">
+  <div class="brand-stack">
+    <img class="brand-logo-img" src="assets/narratio-logo-light.png" alt="Narratio logo" />
+    <h1 class="brand-headline">FILTRO DE CONFIANZA DE NARRATIO™</h1>
+    <p class="brand-subheadline">Ingesta, trazabilidad y confianza unificadas</p>
   </div>
 
   <div style="text-align:right; min-width:230px;">
-    <div class="hero-kicker">Live sandbox · Frontend-only</div>
+    <div class="hero-kicker">Sandbox en vivo · Solo frontend</div>
     <div class="pill-env">
       <span class="pill-env-dot"></span>
-      <span>Demo environment · No data is stored</span>
+      <span>Entorno de demostración · No se almacenan datos</span>
     </div>
   </div>
 </header>
