@@ -73,15 +73,16 @@
     }
 
     .brand-block {
-  display: flex;
+  display: inline-flex;
   flex-direction: column;    /* ⬅ antes era row, ahora columna */
   align-items: flex-start;   /* ⬅ alineado a la izquierda */
-  gap: 10px;
+  gap: 0px;
 }
 
 .brand-logo img {
-  height: 100px;              /* ⬅ logo más grande (ajusta a 60 si quieres aún más) */
+  height: 400px;              /* ⬅ logo más grande (ajusta a 60 si quieres aún más) */
   display: block;
+  margin-bottom: 0;
 }
 
 .brand-text-title {
@@ -481,17 +482,20 @@
 <div class="shell">
   <div class="shell-inner">
 
-    <!-- HEADER -->
-    <header class="top">
+   <header class="top">
   <div class="brand-block">
     <div class="brand-logo">
       <img src="assets/narratio-logo-light.png" alt="Narratio logo" />
     </div>
+
+    <!-- TEXTO JUSTO DEBAJO DEL LOGO -->
     <div>
-      <div class="brand-text-title">Narratio Trust Filter™</div>
-      <div class="brand-text-sub">
+      <h1 class="hero-title" style="margin:0;">
+        FILTRO DE CONFIANZA DE NARRATIO™
+      </h1>
+      <p class="hero-subtitle" style="margin-top:2px;">
         Ingesta, trazabilidad y confianza unificadas
-      </div>
+      </p>
     </div>
   </div>
 
